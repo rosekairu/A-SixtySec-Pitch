@@ -1,0 +1,31 @@
+{% extends 'base.html'%} {% block content %}
+
+<style>
+    .container {
+        background-color: aqua;
+        opacity: 0.9;
+        border-radius: 20px;
+        padding: 15%;
+        text-align: center;
+    }
+    
+    a {
+        text-decoration: none;
+    }
+</style>
+<a href="/" style="text-decoration: none;">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8 text-center">
+                <img src="../static/imgs/error.jpg" alt="error.4-oh-4...page not found, check your url">
+                <h3>Sorry, We could not find that page.</h3>
+                <p>Check your url or <a href="{{ url_for('main.index') }}">
+            Click Here
+        </a>To go to SixtySec Pitch Home Page</p>
+            </div>
+        </div>
+    </div>
+
+
+
+    {% endblock %}

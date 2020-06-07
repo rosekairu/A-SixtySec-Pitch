@@ -1,0 +1,48 @@
+<div class="col-md-2">
+    <div class="sidebar">
+        <div class="menu-list">
+            <a class="" href="/"><i class="fa fa-fw fa-home"></i> SixtySec Pitch</a
+        >
+        <div class="nav-item dropdown" id="dropDown">
+          <a
+            class="nav-link dropdown-toggle"
+            href="#"
+            id="navbarDropdown"
+            role="button"
+            data-toggle="dropdown"
+            data-target="#topics"
+            aria-haspopup="true"
+            aria-expanded="false"
+            ><i class="fa fa-fw fa fa-list-ol"></i>
+            Topics
+          </a>
+            <ul class="sub-menu collapse" id="topics">
+                <li class="dropdown-menu subMenu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="{{url_for('main.goToSoundbyts', _anchor='tech')}}">TechSavy</a>
+                    <p class="dropdown-divider"></p>
+                    <a class="dropdown-item" href="{{url_for('main.goToSoundbyts', _anchor='money')}}">MoneySmart </a>
+                    <p class="dropdown-divider"></p>
+                    <a class="dropdown-item" href="{{url_for('main.goToSoundbyts', _anchor='life')}}">Life & Laughter </a>
+                    <p class="dropdown-divider"></p>
+                </li>
+            </ul>
+        </div>
+        {% if current_user.is_authenticated %}
+        <div>
+            <a href="{{url_for('main.newPitch')}}"><i class="fa fa-fw fa-commenting"></i> Share Your Pitch</a
+          >
+          <a href="{{url_for('main.profile',uname=current_user.username)}}"><i class="fa fa-fw fa-user"></i> My Profile </a>
+            <a href="{{url_for('auth.logout')}}"> <i class="fa fa-fw fa-sign-out"></i> Log out</a>
+            {% else %}
+            <a href="{{url_for('main.new_pitch')}}"><i class="fa fa-fw fa-commenting"></i> Share Your Pitch</a
+        >
+          <a href="{{url_for('auth.register')}}"
+            ><i class="fa fa-fw fa-pencil-square"></i> Register</a
+          >
+          <a href="{{url_for('auth.login')}}"> <i class="fa fa-fw fa-sign-in"></i> Log in</a> {% endif %}
+
+        </div>
+    </div>
+</div>
+
+</div>

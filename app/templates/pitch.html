@@ -1,0 +1,42 @@
+{% extends 'base.html'%} {% import 'bootstrap/wtf.html' as wtf %}
+
+<!---->
+{% block styles%} {{ super() }}
+<link rel="stylesheet" href="{{url_for('static',filename='css/home.css')}}"> {% endblock %}
+
+<!---->
+
+{% block content %}
+<div class="first">
+    <div class="homeDiv">
+        <div class="">
+            <h2 class="homeHeading display-3">SixtySec Pitch</h2>
+
+            <div class="card">
+                <div class="card-header">
+                    Random Quote - A SixtySec Pitch snippet
+                </div>
+                <div class="card-body">
+                    <blockquote class="blockquote mb-0">
+                        <p>{{quote.quote}}</p>
+                        <footer class="blockquote-footer">
+                            {{quote.author}} <cite title="Source Title"> sourced from: {{quote.permalink}}</cite>
+                        </footer>
+                    </blockquote>
+                </div>
+            </div>
+        </div>
+
+        <div id="particles-js">
+            <div class="row justify-content-center">
+                <div class="col-md-2"></div>
+                <div class="col-md-8" id="postform">
+                    <h2 class="text-center">Share Your 60 Seconds Pitch !</h2>
+                    {{wtf.quick_form(form)}}
+                </div>
+                <div class="col-md-2"></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock%}
