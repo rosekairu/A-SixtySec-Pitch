@@ -1,7 +1,7 @@
 {% extends 'base.html'%} {% import 'bootstrap/wtf.html' as wtf %} {% block content %}
 <div class="container" id="allcomments">
     <div class="row">
-        {% for comment in postComments %}
+        {% if all_comments %}
         <div class="col-md-7">
             <h3 class="text-center" id="coms">All comments for the post</h3>
             {% for comment in all_comments %}
@@ -13,24 +13,23 @@
                         --- {{comment.user.username}}
                     </p>
                 </div>
-                <div class="card-footer bg-transparent border-success"><small class="text-muted">Published date:{{comm.date_posted.strftime('%Y-%m-%d')}}</small></div>
             </div>
             {% endfor %}
         </div>
         <div class="col-md-5 commentform">
-            {{wtf.quick_form(PitchForm)}}
+            {{wtf.quick_form(form)}}
         </div>
     </div>
     {%else%}
     <div class="card w-90 mb-3">
         <div class="card-body">
             <p class="card-title">
-                No Comments for this Pitch yet. Be the first to comment...
+                No Comments for this yet for this post. Be the first to comment
             </p>
         </div>
     </div>
     <div class="col-md-5">
-        {{wtf.quick_form(PitchForm)}}
+        {{wtf.quick_form(form)}}
     </div>
     {%endif%}
 </div>

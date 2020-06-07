@@ -1,7 +1,7 @@
-{% macro display(soundbyts) %}
+{% macro display(piches) %}
 <div class="container-fluid">
     <div class="row">
-        {% if soundbyts %} {% for category in soundbyts %}
+        {% if pitches %} {% for category in pitches %}
         <div class="col-md-4">
             <div class="thumbnail" id="carded" class="card" style="
           background-color: rgba(64, 119, 136, 0.9);
@@ -37,7 +37,7 @@
           </div>
 
           <a
-            href="{{url_for('main.comment',soundbyt_id = category.id)}}"
+            href="{{url_for('main.comment',pitch_id = category.id)}}"
             class="btn btn-info btn-sm"
             style="align-items: center;"
           >

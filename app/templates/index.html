@@ -1,75 +1,74 @@
-{% extends 'base.html'%} {% import 'bootstrap/wtf.html' as wtf%}
+{% extends 'base.html'%} {% import 'macros.html' as macro %} {% block content %}
 
-<!---->
-{% block styles%} {{ super() }}
-<link rel="stylesheet" href="{{url_for('static',filename='css/home.css')}}"> {% endblock %}
-
-<!---->
-{% block content %}
-<div class="first">
-    <div class="home">
-        <div class="">
-            <h1 class="homeHeading display-3">SixtySec Pitch</h1>
-
-            <div class="card">
-                <div class="card-header">
-                    Random Quote - A SixtySec Pitch snippet
-                </div>
-
-                <div class="card-body">
-                    <blockquote class="blockquote mb-0">
-                        <p>{{quote.quote}}</p>
-                        <footer class="blockquote-footer">
-                            {{quote.author}} <cite title="Source Title"> sourced from: {{quote.permalink}}</cite>
-                        </footer>
-                    </blockquote>
-                </div>
-            </div>
-        </div>
-
-
-        <!-- -->
-        <div class="row">
-
-            <div class="col-md-4 forIpad">
-                <div class="card">
-                    <h5 class="card-header"><a href="{{url_for('main.new_pitch', _anchor='tech')}}">TechSavy</a></h5>
-                    <div class="card-body">
-                        <h5 class="card-title">Special title treatment</h5>
-                        <p class="card-text">
-                            With supporting text below as a natural lead-in to additional content.
-                        </p>
-                        <a href="{{url_for('main.new_pitch',_anchor='tech')}}" class="btn btn-outline-primary">Read more...</a>
-                    </div>
-                </div>
+<div class="homeDiv">
+    <div class="">
+        <br>
+        <div class="card">
+            <div class="card-header" style="background-color: aqua;">
+                Random Quote - A SixtySec snippet
             </div>
 
-            <div class="col-md-4  forIpad">
-                <div class="card">
-                    <h5 class="card-header"><a href="{{url_for('main.new_pitch',_anchor='money')}}">MoneySmart </a></h5>
-                    <div class="card-body">
-                        <h5 class="card-title">Special title treatment</h5>
-                        <p class="card-text">
-                            With supporting text below as a natural lead-in to additional content.
-                        </p>
-                        <a href="{{url_for('main.new_pitch',_anchor='money')}}" class="btn btn-outline-primary">Read more...</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-4 forIpad">
-                <div class="card">
-                    <h5 class="card-header"><a href="{{url_for('main.new_pitch',_anchor='life')}}">Life & Laughter </a></h5>
-                    <div class="card-body">
-                        <h5 class="card-title">Special title treatment</h5>
-                        <p class="card-text">
-                            With supporting text below as a natural lead-in to additional content.
-                        </p>
-                        <a href="{{url_for('main.new_pitch', _anchor='life')}}" class="btn btn-outline-primary"> Read more...</a>
-                    </div>
-                </div>
+            <div class="card-body" style="background-color: lightcyan;">
+                <blockquote class="blockquote mb-0">
+                    <p>{{quote.quote}}</p>
+                    <footer class="blockquote-footer">
+                        <p class="">
+                            <strong style="font-style: italic;">Author :</strong>
+                            <small><span style="text-decoration: underline; font-size: 18px;"
+                      >{{quote.author}}</span
+                    >
+                  </small>
+                        </p> <cite title="Source Title"> sourced from: {{quote.permalink}}</cite>
+                    </footer>
+                </blockquote>
             </div>
         </div>
     </div>
 </div>
-{% endblock%}
+<!-- blog posts -->
+
+
+<div class="container" id="particles-js">
+    <h2 class="text-center" id="posts"></h2>
+    <ul class="nav nav-pills nav-justified nav-fill" role="tablist">
+        <li class="nav-item">
+            <a id="cats" class="nav-link" data-toggle="tab" href="#all"><strong>SixtySec Pitch</strong>
+      </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="cats" data-toggle="tab" href="#jobs">Flask Pitches</a
+      >
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="cats" data-toggle="tab" href="#event"
+        >Django Pitches</a
+      >
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="cats" data-toggle="tab" href="#ads"
+        >Angular Pitches</a
+      >
+    </li>
+  </ul>
+  <div class="tab-content">
+    <div class="container tab-pane active" id="all">
+      <br />
+      {{ macro.display(pitches) }}
+    </div>
+    <div class="container tab-pane fade" id="event">
+      <br />
+      {{ macro.display(event)}}
+    </div>
+    <div class="container tab-pane fade" id="jobs">
+      <br />
+      {{ macro.display(job) }}
+    </div>
+    <div class="container tab-pane fade" id="ads">
+      <br />
+      {{ macro.display(advertisement) }}
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}
