@@ -6,13 +6,13 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent-4">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item">
-                <a class="nav-link" href="{{url_for('main.index')}}">Pitch for 60 Second </a>
+                <a class="nav-link" href="{{url_for('main.index')}}"> Home </a>
             </li>
-            {% if current_user.is_authenticated %}
+
             <li class="nav-item">
                 <a class="nav-link" href="{{url_for('main.new_pitch')}}">Create A 60 Second Pitch</a>
             </li>
-            {% endif %}
+
         </ul>
         <ul class="navbar-nav ml-auto">
             {% if current_user.is_authenticated %}
