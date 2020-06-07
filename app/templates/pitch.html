@@ -8,7 +8,7 @@
 
 {% block content %}
 <div class="first">
-    <div class="homeDiv">
+    <div class="home">
         <div class="">
             <h2 class="homeHeading display-3">SixtySec Pitch</h2>
 
@@ -32,7 +32,7 @@
                 <div class="col-md-2"></div>
                 <div class="col-md-8" id="postform">
                     <h2 class="text-center">Share Your 60 Seconds Pitch !</h2>
-                    {{wtf.quick_form(form)}}
+                    {{wtf.quick_form(PitchForm)}}
                 </div>
                 <div class="col-md-2"></div>
             </div>

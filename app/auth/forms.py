@@ -6,17 +6,17 @@ from ..models import User
 
 
 class LoginForm(FlaskForm):
-    email = StringField('Your Email Address',validators=[Required(),Email()])
-    password = PasswordField('Password',validators =[Required()])
+    email = StringField('Your Email Address',validators=[Required(),Email()], render_kw={"placeholder": "e.g JaneDoe@pitchtoday.com"})
+    password = PasswordField('Password',validators =[Required()], render_kw={"placeholder": "Your password"})
     remember = BooleanField('Remember me')
     submit = SubmitField('Sign In')
 
 
 class RegistrationForm(FlaskForm):
-    email = StringField('Your Email Address',validators=[Required(), Email()])
-    username = StringField('Enter your username',validators = [Required()])
-    password = PasswordField('Password',validators = [Required(), EqualTo('password_confirm',message = 'Passwords must match')])
-    password_confirm = PasswordField('Confirm Passwords',validators = [Required()])
+    email = StringField('Your Email Address',validators=[Required(), Email()], render_kw={"placeholder": "Enter your email address"})
+    username = StringField('Enter your username',validators = [Required()], render_kw={"placeholder": "Enter your preferred username"})
+    password = PasswordField('Password',validators = [Required(), EqualTo('password_confirm',message = 'Passwords must match')], render_kw={"placeholder": "Preferred password"})
+    password_confirm = PasswordField('Confirm Passwords',validators = [Required()], render_kw={"placeholder": "Confirm password"})
     submit = SubmitField('Sign Up')
 
     def validate_email(self,data_field):

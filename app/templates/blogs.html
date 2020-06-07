@@ -7,23 +7,23 @@
 <!---->
 {% block content %}
 <div class="first">
-    <div class="homeDiv">
+    <div class="home">
         <div class="row justify-content-center register">
             <div class="col-md-10">
 
-                <!-- TechSavy Blogpost -->
+                <!-- TechSavy -->
                 <div id="tech">
                     {% if TechSavyPosts %}
                     <h4>TechSavy Pitch</h4>
-                    <hr /> {% for Soundbyts in TechSavyPosts %}
+                    <hr /> {% for soundbyt in TechSavyPosts %}
 
                     <div class="">
                         <div class="card posts">
                             <div class="card-body">
-                                {{ Soundbyts.Soundbyts }}
+                                {{ soundbyt.soundbyt }}
                                 <hr />
                                 <p class="comments">Comments</p>
-                                {% for comment in comments %} {% if comment.blog_id == blog.id %}
+                                {% for comment in comments %} {% if comment.soundbyt_id == soundbyt.id %}
                                 <p>{{ comment.comment }}</p>
                                 {% endif %} {% endfor %}
                             </div>
@@ -42,16 +42,16 @@
                     {% endif %}
                 </div>
 
-                <!-- MoneySmart Blogposts -->
+                <!-- MoneySmart -->
                 <div id="money">
                     {% if MoneySmartPosts %}
                     <h4>MoneySmart Pitch</h4>
-                    <hr /> {% for Soundbyts in MoneySmartPosts %}
+                    <hr /> {% for soundbyt in MoneySmartPosts %}
 
                     <div class="">
                         <div class="card posts">
                             <div class="card-body">
-                                {{ Soundbyts.Soundbyts }}
+                                {{ soundbyt.soundbyt }}
                                 <hr />
                                 <p class="comments">Comments</p>
                                 {% for comment in comments %}
@@ -75,16 +75,16 @@
                     {% endif %}
                 </div>
 
-                <!-- Life & Laughter Blogposts -->
+                <!-- Life & Laughter -->
                 <div id="life">
                     {% if LifenLaughterPosts %}
                     <h4>Life & Laughter Pitch</h4>
-                    <hr /> {% for Soundbyts in LifenLaughterPosts %}
+                    <hr /> {% for soundbyt in LifenLaughterPosts %}
 
                     <div class="">
                         <div class="card posts">
                             <div class="card-body">
-                                {{ Soundbyts.Soundbyts }}
+                                {{ soundbyt.soundbyt }}
                                 <hr />
                                 <p class="comments">Comments</p>
                                 {% for comment in comments %}
