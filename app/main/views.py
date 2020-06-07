@@ -2,7 +2,7 @@ import markdown2
 from flask import render_template,request,redirect,url_for,abort,flash
 from . import main
 from flask_login import login_required, current_user
-from ..models import Pitch, User, Comment, Upvote, Downvote
+from ..models import Pitch, User, Comment, Upvote, Downvote,PhotoProfile
 from .forms import UpdateProfile, PitchForm, CommentForm
 from .. import db, photos
 from ..requests import get_quote
@@ -19,76 +19,57 @@ def index():
     '''
     quote = get_quote()
     
-    title = 'SixtySec Pitch'
-    return render_template('index.html', title=title, quote= quote)
+    pitches = Pitch.query.all()
+    job = Pitch.query.filter_by(category='Job').all()
+    event = Pitch.query.filter_by(category='Events').all()
+    advertisement = Pitch.query.filter_by(category='Advertisement').all()
 
-# share pitchposts 
-@main.route('/pitch/', methods=['GET','POST'])
+    title = 'SixtySec Pitch'
+    return render_template('index.html', title=title, quote= quote, event=event, pitches=pitches, advertisement=advertisement)
+
+
+# share pitch 
+@main.route('/create_new', methods=['POST', 'GET'])
 @login_required
 def new_pitch():
-    '''
-    View pitch page function that returns the post sharing page and its data
-    '''
+
     quote = get_quote()
-        
     form = PitchForm()
     
     if form.validate_on_submit():
-          category = form.category.data
-          pitch = form.pitch.data
-          comment = form.comment.data
-
-          new_pitch = Pitches(title = title, category = category, pitch = pitch, user_id=current_user_id)
-
-          title = 'New Pitch'
-
-          new_pitch.save_pitch()
-
-          return redirect(url_for('main.index'))
-          db.session.add(new_pitch)
-          db.session.commit()
-
-          return redirect(url_for('main.index'))
+        title = form.title.data
+        post = form.post.data
+        category = form.category.data
+        user_id = current_user
+        new_pitch_object = Pitch(post=post, user_id=current_user._get_current_object(
+        ).id, category=category, title=title)
+        new_pitch_object.save_pitch()
+        return redirect(url_for('main.index'))
     
     title = 'SixtySec Pitch'
-    return render_template('pitch.html', title=title, PitchForm=form, quote=quote)
-
-@main.route('/comments/<id>', methods=['GET','POST'])
-@login_required
-def postComments(id):
-    '''
-    View comments function that returns the blogposts page with the posted comments
-    '''
-    print('===================================================')
+    return render_template('pitch.html', form=form, title=title,  quote=quote)
     
-    comment = Comments.get_comment(id)
-        
-    print('===================================================')
 
-    print(comment)
-    title = 'comments'
-    
-    title='SixtySec Pitch'
-    return render_template('comments.html', form = form, postComments = comment, title=title)
-
-@main.route('/new_comment/<int:pitch_id>', methods = ['GET', 'POST'])
+# Redirect to pitch page
+@main.route('/comment/<int:pitch_id>', methods=['POST', 'GET'])
 @login_required
-def new_comment(pitch_id):
-    pitches = Pitch.query.filter_by(id = pitch_id).first()
+def comment(pitch_id):
     form = CommentForm()
-
+    pitch = Pitch.query.get(pitch_id)
+    all_comments = Comment.query.filter_by(pitch_id=pitch_id).all()
     if form.validate_on_submit():
         comment = form.comment.data
+        pitch_id = pitch_id
+        user_id = current_user._get_current_object().id
+        new_comment = Comment(
+            comment=comment, user_id=user_id, pitch_id=pitch_id)
+        new_comment.save_c()
+        return redirect(url_for('.comment', pitch_id=pitch_id))
 
-        new_comment = Comments(comment=comment,user_id=current_user.id, pitch_id=pitch_id)
-
-
-        new_comment.save_comment()
-
-
-        return redirect(url_for('main.index'))
-    title='New Pitch'
-    return render_template('new_comment.html',title=title,comment_form = form,pitch_id=pitch_id)
+    
+    title = 'SixtySec Pitch'
+    return render_template('comment.html', title=title, form=form, pitch=pitch, all_comments=all_comments)
+    
 
 # user profile page
 @main.route('/user/<name>')
@@ -160,7 +141,7 @@ def upvote(pitch_id):
 def downvote(pitch_id):
     pitch = Pitch.query.get(pitch_id)
     user = current_user
-    pitch_downvotes = Downvote.query.filter_by(pitch_id= pitch_id)
+    pitch = Downvote.query.filter_by(pitch_id= pitch_id)
     
     if Downvote.query.filter(Downvote.user_id==user.id,Downvote.pitch_id==pitch_id).first():
         return  redirect(url_for('main.index'))
