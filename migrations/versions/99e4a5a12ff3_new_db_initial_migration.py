@@ -1,8 +1,8 @@
-"""Initial Migration
+"""New db Initial Migration
 
-Revision ID: e5ff6fc08d01
+Revision ID: 99e4a5a12ff3
 Revises: 
-Create Date: 2020-06-07 02:06:44.534424
+Create Date: 2020-06-07 17:23:12.079195
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'e5ff6fc08d01'
+revision = '99e4a5a12ff3'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -29,38 +29,48 @@ def upgrade():
     )
     op.create_index(op.f('ix_users_email'), 'users', ['email'], unique=True)
     op.create_index(op.f('ix_users_username'), 'users', ['username'], unique=False)
-    op.create_table('soundbyts',
+    op.create_table('pitches',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('title', sa.String(length=255), nullable=False),
-    sa.Column('users_id', sa.Integer(), nullable=True),
+    sa.Column('post', sa.Text(), nullable=False),
+    sa.Column('user_id', sa.Integer(), nullable=True),
     sa.Column('time', sa.DateTime(), nullable=True),
     sa.Column('category', sa.String(length=255), nullable=False),
-    sa.ForeignKeyConstraint(['users_id'], ['users.id'], ),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_index(op.f('ix_soundbyts_category'), 'soundbyts', ['category'], unique=False)
+    op.create_index(op.f('ix_pitches_category'), 'pitches', ['category'], unique=False)
+    op.create_table('profile_photos',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('pic_path', sa.String(), nullable=True),
+    sa.Column('user_id', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
     op.create_table('comments',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('comment', sa.Text(), nullable=False),
-    sa.Column('users_id', sa.Integer(), nullable=False),
-    sa.Column('soundbyts_id', sa.Integer(), nullable=False),
-    sa.ForeignKeyConstraint(['soundbyts_id'], ['soundbyts.id'], ),
-    sa.ForeignKeyConstraint(['users_id'], ['users.id'], ),
+    sa.Column('comment', sa.String(length=255), nullable=True),
+    sa.Column('user_id', sa.Integer(), nullable=True),
+    sa.Column('pitch_id', sa.Integer(), nullable=False),
+    sa.ForeignKeyConstraint(['pitch_id'], ['pitches.id'], ),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('downvotes',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('user_id', sa.Integer(), nullable=True),
+    sa.Column('downvote', sa.Integer(), nullable=True),
     sa.Column('pitch_id', sa.Integer(), nullable=True),
-    sa.ForeignKeyConstraint(['pitch_id'], ['soundbyts.id'], ),
+    sa.Column('user_id', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['pitch_id'], ['pitches.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('upvotes',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('user_id', sa.Integer(), nullable=True),
+    sa.Column('upvote', sa.Integer(), nullable=True),
     sa.Column('pitch_id', sa.Integer(), nullable=True),
-    sa.ForeignKeyConstraint(['pitch_id'], ['soundbyts.id'], ),
+    sa.Column('user_id', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['pitch_id'], ['pitches.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
@@ -72,8 +82,9 @@ def downgrade():
     op.drop_table('upvotes')
     op.drop_table('downvotes')
     op.drop_table('comments')
-    op.drop_index(op.f('ix_soundbyts_category'), table_name='soundbyts')
-    op.drop_table('soundbyts')
+    op.drop_table('profile_photos')
+    op.drop_index(op.f('ix_pitches_category'), table_name='pitches')
+    op.drop_table('pitches')
     op.drop_index(op.f('ix_users_username'), table_name='users')
     op.drop_index(op.f('ix_users_email'), table_name='users')
     op.drop_table('users')
