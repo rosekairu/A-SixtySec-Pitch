@@ -4,7 +4,7 @@
         {% if pitches %} {% for category in pitches %}
         <div class="col-md-4">
             <div class="thumbnail" id="carded" class="card" style="
-          background-color: rgba(64, 119, 136, 0.9);
+          background-color: rgba(29, 154, 192, 0.404);
           margin-bottom: 20px;
           color: white;
         ">
@@ -17,7 +17,7 @@
                     <div class="card-footer">
                         <span class="foot">{{category.comment.count()}} Comments</span>
                         <span class="foot">
-              <a href="{{url_for('main.like',id = category.id)}}"
+              <a href="{{url_for('main.upvote',id = category.id)}}"
                 ><button>
                   <i
                     class="fa fa-thumbs-up"
@@ -28,7 +28,7 @@
             >
 
             <span class="foot">
-              <a href="{{url_for('main.dislike',id = category.id)}}">
+              <a href="{{url_for('main.downvote',id = category.id)}}">
                 <button>
                   <i class="fa fa-thumbs-down" style="color: red;"></i>
                 </button> </a
