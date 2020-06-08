@@ -1,3 +1,10 @@
+.third {
+    background-image: url("../imgs/bg5.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
 .card2 {
     background-color: black;
     color: white;
@@ -8,4 +15,10 @@
     padding-right: 20%;
     margin-top: 5%;
     margin-bottom: 2%;
+}
+
+@media screen and (max-height: 450px) {
+    .card2 {
+        padding-top: 15px;
+    }
 }

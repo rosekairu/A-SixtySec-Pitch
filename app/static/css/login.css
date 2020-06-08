@@ -1,3 +1,9 @@
+.second {
+    background-image: url("../imgs/bg5.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
 .card {
     background-color: black;
     opacity: 0.9;
@@ -6,4 +12,10 @@
     border-radius: 20px;
     color: white;
     margin-bottom: 9%;
+}
+
+@media screen and (max-height: 450px) {
+    .card {
+        padding-top: 15px;
+    }
 }

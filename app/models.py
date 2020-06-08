@@ -12,16 +12,14 @@ class User(UserMixin,db.Model):
     __tablename__ = 'users'
 
     id = db.Column(db.Integer,primary_key = True)
-    username = db.Column(db.String(255),index = True)
+    username = db.Column(db.String(255))
     email = db.Column(db.String(255),unique = True,index = True)
-    #category = db.Column(db.String(255), unique = True,index = True)
-    #role_id = db.Column(db.Integer,db.ForeignKey('roles.id'))
     bio = db.Column(db.String(255))
     profile_pic_path = db.Column(db.String())
     photos = db.relationship('PhotoProfile',backref = 'user',lazy = "dynamic")
 
     pass_secure = db.Column(db.String(255))
-    pitches = db.relationship('Pitch', backref='user', lazy='dynamic')
+    blogposts = db.relationship('Blogpost',backref = 'user',lazy="dynamic")
     
     comment = db.relationship('Comment', backref='user', lazy='dynamic')
     upvotes = db.relationship('Upvote', backref='user', lazy='dynamic')
@@ -58,21 +56,21 @@ class PhotoProfile(db.Model):
     user_id = db.Column(db.Integer,db.ForeignKey("users.id"))
 
 
-class Pitch(db.Model):
-    __tablename__ = 'pitches'
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(255))
-    content = db.Column(db.String())
+# Blogpost Model
+class Blogpost(db.Model):
+    __tablename__ = 'blogposts'
+    id = db.Column(db.Integer,primary_key = True)
+    blogpost = db.Column(db.String(700))
+    category = db.Column(db.String(255))
     
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     time = db.Column(db.DateTime, default=datetime.utcnow)
-    category = db.Column(db.String(255))
 
-    comment = db.relationship('Comment', backref='pitch', lazy='dynamic')
+    comment = db.relationship('Comment',backref = 'blogpost',lazy="dynamic")
     upvote = db.relationship('Upvote', backref='pitch', lazy='dynamic')
     downvote = db.relationship('Downvote', backref='pitch', lazy='dynamic')
 
-    def save_pitch(self):
+    def save_blogpost(self):
         db.session.add(self)
         db.session.commit()
 
@@ -84,11 +82,9 @@ class Comment(db.Model):
     __tablename__='comments'
     id = db.Column(db.Integer,primary_key = True)
     comment = db.Column(db.String(255))
+    users_id = db.Column(db.Integer,db.ForeignKey('users.id'))
+    blogpost_id = db.Column(db.Integer,db.ForeignKey('blogposts.id'))
     time = db.Column(db.DateTime, default=datetime.utcnow)
-    user_id = db.Column(db.Integer,db.ForeignKey('users.id'))
-    pitch_id = db.Column(db.Integer, db.ForeignKey(
-        'pitches.id'))
-
     
     def save_comment(self):
         db.session.add(self)
@@ -96,8 +92,8 @@ class Comment(db.Model):
     
     
     @classmethod
-    def get_comments(cls, pitch_id):
-        comments = Comment.query.filter_by(pitch_id=pitch_id).all()
+    def get_comments(cls, blogpost_id):
+        comments = Comment.query.filter_by(blogpost_id=blogpost_id).all()
 
         return comments
 
@@ -110,7 +106,7 @@ class Upvote(db.Model):
 
     id = db.Column(db.Integer,primary_key=True)
     upvote = db.Column(db.Integer,default=1)
-    pitch_id = db.Column(db.Integer,db.ForeignKey('pitches.id'))
+    blogpost_id = db.Column(db.Integer,db.ForeignKey('blogposts.id'))
     user_id = db.Column(db.Integer,db.ForeignKey('users.id'))
 
     
@@ -119,28 +115,28 @@ class Upvote(db.Model):
         db.session.commit()
 
     def add_upvotes(cls,id):
-        upvote_pitch = Upvote(user = current_user, pitch_id=id)
+        upvote_pitch = Upvote(user = current_user, blogpost_id=id)
         upvote_pitch.save_upvotes()
   
     @classmethod
     def get_upvotes(cls, id):
-        upvote = Upvote.query.filter_by(pitch_id=id).all()
+        upvote = Upvote.query.filter_by(blogpost_id=id).all()
         return upvote
 
     @classmethod
-    def get_all_upvotes(cls,pitch_id):
+    def get_all_upvotes(cls,blogpost_id):
         upvotes = Upvote.query.order_by('id').all()
         return upvotes
 
     def __repr__(self):
-        return f'{self.user_id}:{self.pitch_id}'
+        return f'{self.user_id}:{self.blogpost_id}'
 
 class Downvote(db.Model):
     __tablename__ = 'downvotes'
 
     id = db.Column(db.Integer,primary_key=True)
     downvote = db.Column(db.Integer,default=1)
-    pitch_id = db.Column(db.Integer,db.ForeignKey('pitches.id'))
+    blogpost_id = db.Column(db.Integer,db.ForeignKey('blogposts.id'))
     user_id = db.Column(db.Integer,db.ForeignKey('users.id'))
 
     def save_downvotes(self):
@@ -148,21 +144,21 @@ class Downvote(db.Model):
         db.session.commit()
 
     def add_downvotes(cls,id):
-        downvote_pitch = Downvote(user = current_user, pitch_id=id)
+        downvote_pitch = Downvote(user = current_user, blogpost_id=id)
         downvote_pitch.save_downvotes()
 
     @classmethod
     def get_downvotes(cls,id):
-        downvote = Downvote.query.filter_by(pitch_id=id).all()
+        downvote = Downvote.query.filter_by(blogpost_id=id).all()
         return downvote
 
     @classmethod
-    def get_all_downvotes(cls,pitch_id):
+    def get_all_downvotes(cls,blogpost_id):
         downvote = Downvote.query.order_by('id').all()
         return downvote
 
     def __repr__(self):
-        return f'{self.user_id}:{self.pitch_id}'
+        return f'{self.user_id}:{self.blogpost_id}'
 
 
 

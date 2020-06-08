@@ -3,12 +3,13 @@ from wtforms import SelectField,StringField,TextAreaField,RadioField,SubmitField
 from wtforms.validators import Required,Email,EqualTo
 from wtforms import ValidationError
 
-class PitchForm(FlaskForm):
-    title = StringField('Title', validators=[Required()])
-    category = SelectField('Category', choices=[('Events', 'Django'), (
-        'Job', 'Flask'), ('Advertisement', 'Angular')], validators=[Required()])
-    post = TextAreaField('Your Pitch', validators=[Required()])
-    submit = SubmitField('Pitch')
+class SharePostForm(FlaskForm):
+    '''
+    The blog-post sharing form
+    '''
+    topic = SelectField('', choices=[('TechSavy', 'TechSavy'), ('MoneySmart','MoneySmart'), ('Life & Laughter', 'Life & Laughter')], validators=[Required()])
+    content = TextAreaField('', validators=[Required()], render_kw={"placeholder": "Write your story here :)"})
+    submit = SubmitField('Share')
     
 class CommentForm(FlaskForm):
     description = TextAreaField('',validators=[Required()], render_kw={"placeholder": "Post your comment here..."})

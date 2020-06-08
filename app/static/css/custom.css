@@ -11,6 +11,13 @@
     margin-right: 30px;
 }
 
+.homebg {
+    background-image: url("../imgs/bg5.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
 .sidebar {
     position: fixed;
     background-color: #111;

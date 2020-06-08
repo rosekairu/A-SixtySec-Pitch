@@ -2,15 +2,15 @@ import markdown2
 from flask import render_template,request,redirect,url_for,abort,flash
 from . import main
 from flask_login import login_required, current_user
-from ..models import Pitch, User, Comment, Upvote, Downvote,PhotoProfile
-from .forms import UpdateProfile, PitchForm, CommentForm
+from ..models import Blogpost, User, Comment, Upvote, Downvote,PhotoProfile
+from .forms import UpdateProfile, SharePostForm, CommentForm
 from .. import db, photos
 from ..requests import get_quote
 
 
 #Views
 
-# home page
+    # home page
 @main.route('/')
 def index():
 
@@ -19,67 +19,76 @@ def index():
     '''
     quote = get_quote()
     
-    pitches = Pitch.query.order_by(Pitch.time.desc())
-    #best_pitch=Pitch.query.order_by(Pitch.upvote.desc()).first()
-    
-    flask = Pitch.query.filter_by(category='Flask').all()
-    django = Pitch.query.filter_by(category='Django').all()
-    angular = Pitch.query.filter_by(category='Angular').all()
-
     title = 'SixtySec Pitch'
-    return render_template('index.html', title=title, quote= quote, django=django, pitches=pitches, angular=angular, flask=flask)
+    return render_template('index.html', title=title, quote= quote)
 
 
 
-
-
-# share pitch 
-@main.route('/new_pitch', methods=['POST', 'GET'])
-@login_required
-def new_pitch():
-
+# share blogpost 
+@main.route('/sharepost', methods=['GET','POST'])
+def sharepost():
+    '''
+    View share post page function that returns the post sharing page and its data
+    '''
     quote = get_quote()
-
-    form = PitchForm()
+        
+    form = SharePostForm()
+    # blogposts = Blogpost.query.all()
     
     if form.validate_on_submit():
-        title = form.title.data
-        content = form.content.data
-        category = form.category.data
-        
-        user_id = current_user
-        new_pitch_object = Pitch(content=content, user_id=current_user._get_current_object(
-        ).id, category=category, title=title)
-        
-        new_pitch_object.save_pitch()
-        return redirect(url_for('main.index'))
+        blogpost = Blogpost(category=form.topic.data, blogpost=form.content.data)
+        db.session.add(blogpost)
+        db.session.commit()
     
-    current_pitch=Pitch.query.order_by(Pitch.desc()).first()
-    title = 'New Pitch'
-    return render_template('pitch.html', form=form, title=title,  quote=quote, current_pitch=current_pitch)
+        return redirect(url_for('main.goToBlogposts'))
+    
+    title = 'SixtySec Pitch'
+    return render_template('sharepost.html', title=title, SharePostForm=form, quote=quote)
     
 
-# Redirect to pitch page
-@main.route('/comment/<pitch_id>', methods=['POST', 'GET'])
-@login_required
-def comment(pitch_id):
+# Redirect to blogpost page
+@main.route('/blogposts', methods=['GET','POST'])
+def goToBlogposts():
+    '''
+    View blogposts page function that returns the pitches page and its details
+    '''   
+    TechSavyPosts = Blogpost.query.filter_by(category='TechSavy').all()
+    MoneySmartPosts = Blogpost.query.filter_by(category='MoneySmart').all()
+    LifenLaughterPosts = Blogpost.query.filter_by(category='Life & Laughter').all()
     
-    form = CommentForm()
-    pitch = Pitch.query.get(pitch_id)
-    all_comments = Comment.query.filter_by(pitch_id=pitch_id).all()
-    
-    if form.validate_on_submit():
-        comment = form.comment.data
-        pitch_id = pitch_id
-        user_id = current_user._get_current_object().id
-        new_comment = Comment(
-            comment=comment, user_id=user_id, pitch_id=pitch_id)
-        new_comment.save_comment()
-        return redirect(url_for('.comment', pitch_id=pitch_id))
+    comment_form = CommentForm()
+    # comments = Blogpost.query.filter_by(blogpost_id=id)
+    # comments = Comment.query.filter_by(blogpost_id=id).first()
+    comments = Comment.query.filter(Comment.blogpost_id > 0).all()
 
     
     title = 'SixtySec Pitch'
-    return render_template('comment.html', title=title, form=form, pitch=pitch, all_comments=all_comments)
+    return render_template('/blogposts.html', TechSavyPosts=TechSavyPosts, MoneySmartPosts=MoneySmartPosts, LifenLaughterPosts=LifenLaughterPosts, comments = comments, CommentForm=comment_form, title=title)
+
+
+#posting comments
+@main.route('/blogposts', methods = ['GET','POST'])
+def postComments():
+    '''
+    View comments function that returns the blogposts page with the posted comments
+    '''
+    print('===================================================')
+    
+    commentform = CommentForm()
+        
+    print('===================================================')
+    
+    if commentform.validate_on_submit():
+        comment = Comment(comment=commentform.comment.data, blogpost_id=3, users_id = 2)
+        print(comment)
+        print('===================================================')
+        db.session.add(comment)
+        db.session.commit()
+    
+        return redirect(url_for('main.goToBlogposts'))
+    
+    title='SixtySec Pitch'
+    return render_template('/blogposts.html', TechSavyPosts=TechSavyPosts, MoneySmartPosts=MoneySmartPosts, LifenLaughterPosts=LifenLaughterPosts, comment = comment, CommentForm=comment_form, title=title)
     
 
 @main.route('/upvote/<int:pitch_id>', methods=['POST', 'GET'])
