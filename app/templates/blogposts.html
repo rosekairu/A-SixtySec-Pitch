@@ -1,0 +1,107 @@
+{% extends 'base.html' %} {% import 'bootstrap/wtf.html' as wtf %} {% block content %}
+
+<div class="homeDiv">
+    <div class="row justify-content-center register">
+        <div class="col-md-10">
+
+            <!-- TechSavy Blogposts -->
+            <div id="tech">
+                {% if TechSavyPosts %}
+                <h4>TechSavy Insights</h4>
+                <hr /> {% for blogpost in TechSavyPosts %}
+
+                <div class="">
+                    <div class="card posts">
+                        <div class="card-body">
+                            {{ blogpost.blogpost }}
+                            <hr />
+                            <p class="comments">Comments</p>
+                            {% for comment in comments %} {% if comment.blopost_id == blogpost.id %}
+                            <p>{{ comment.comment }}</p>
+                            {% endif %} {% endfor %}
+                        </div>
+
+                        <div>
+                            {{ wtf.quick_form(CommentForm) }}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div>
+                    <p>No TechSavy blogposts yet</p>
+                </div>
+
+                {% endif %}
+            </div>
+
+            <!-- MoneySmart Blogposts -->
+            <div id="money">
+                {% if MoneySmartPosts %}
+                <h4>MoneySmart Insights</h4>
+                <hr /> {% for blogpost in MoneySmartPosts %}
+
+                <div class="">
+                    <div class="card posts">
+                        <div class="card-body">
+                            {{ blogpost.blogpost }}
+                            <hr />
+                            <p class="comments">Comments</p>
+                            {% for comment in comments %}
+
+                            <p>{{ comment.comment }}</p>
+
+                            {% endfor %}
+                        </div>
+
+                        <div>
+                            {{ wtf.quick_form(CommentForm) }}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div>
+                    <p>No MoneySmart blogposts yet</p>
+                </div>
+
+                {% endif %}
+            </div>
+
+            <!-- Life & Laughter Blogposts -->
+            <div id="life">
+                {% if LifenLaughterPosts %}
+                <h4>Life & Laughter Insights</h4>
+                <hr /> {% for blogpost in LifenLaughterPosts %}
+
+                <div class="">
+                    <div class="card posts">
+                        <div class="card-body">
+                            {{ blogpost.blogpost }}
+                            <hr />
+                            <p class="comments">Comments</p>
+                            {% for comment in comments %}
+
+                            <p>{{ comment.comment }}</p>
+
+                            {% endfor %}
+                        </div>
+
+                        <div>
+                            {{ wtf.quick_form(CommentForm) }}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div>
+                    <p>No Life & Laughter blogposts yet</p>
+                </div>
+
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

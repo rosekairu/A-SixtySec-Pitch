@@ -1,0 +1,164 @@
+import markdown2 
+from flask import render_template,request,redirect,url_for,abort,flash
+from . import main
+from flask_login import login_required, current_user
+from ..models import Pitch, User, Comment, Upvote, Downvote,PhotoProfile
+from .forms import UpdateProfile, PitchForm, CommentForm
+from .. import db, photos
+from ..requests import get_quote
+
+
+#Views
+
+# home page
+@main.route('/')
+def index():
+
+    '''
+    View root page function that returns the index page and its data
+    '''
+    quote = get_quote()
+    
+    pitches = Pitch.query.order_by(Pitch.time.desc())
+    #best_pitch=Pitch.query.order_by(Pitch.upvote.desc()).first()
+    
+    flask = Pitch.query.filter_by(category='Flask').all()
+    django = Pitch.query.filter_by(category='Django').all()
+    angular = Pitch.query.filter_by(category='Angular').all()
+
+    title = 'SixtySec Pitch'
+    return render_template('index.html', title=title, quote= quote, django=django, pitches=pitches, angular=angular, flask=flask)
+
+
+
+
+
+# share pitch 
+@main.route('/new_pitch', methods=['POST', 'GET'])
+@login_required
+def new_pitch():
+
+    quote = get_quote()
+
+    form = PitchForm()
+    
+    if form.validate_on_submit():
+        title = form.title.data
+        content = form.content.data
+        category = form.category.data
+        
+        user_id = current_user
+        new_pitch_object = Pitch(content=content, user_id=current_user._get_current_object(
+        ).id, category=category, title=title)
+        
+        new_pitch_object.save_pitch()
+        return redirect(url_for('main.index'))
+    
+    current_pitch=Pitch.query.order_by(Pitch.desc()).first()
+    title = 'New Pitch'
+    return render_template('pitch.html', form=form, title=title,  quote=quote, current_pitch=current_pitch)
+    
+
+# Redirect to pitch page
+@main.route('/comment/<pitch_id>', methods=['POST', 'GET'])
+@login_required
+def comment(pitch_id):
+    
+    form = CommentForm()
+    pitch = Pitch.query.get(pitch_id)
+    all_comments = Comment.query.filter_by(pitch_id=pitch_id).all()
+    
+    if form.validate_on_submit():
+        comment = form.comment.data
+        pitch_id = pitch_id
+        user_id = current_user._get_current_object().id
+        new_comment = Comment(
+            comment=comment, user_id=user_id, pitch_id=pitch_id)
+        new_comment.save_comment()
+        return redirect(url_for('.comment', pitch_id=pitch_id))
+
+    
+    title = 'SixtySec Pitch'
+    return render_template('comment.html', title=title, form=form, pitch=pitch, all_comments=all_comments)
+    
+
+@main.route('/upvote/<int:pitch_id>', methods=['POST', 'GET'])
+@login_required
+def upvote(pitch_id):
+    pitch = Pitch.query.get(pitch_id)
+    user = current_user
+    pitch_upvotes = Upvote.query.filter_by(pitch_id= pitch_id)
+    
+    if Upvote.query.filter(Upvote.user_id==user.id,Upvote.pitch_id==pitch_id).first():
+        return  redirect(url_for('.comment'))
+
+
+    new_upvote = Upvote(pitch_id=pitch_id, user = current_user)
+    new_upvote.save_upvotes()
+    return redirect(url_for('main.index'))
+
+
+
+@main.route('/downvote/<pitch_id>', methods=['POST', 'GET'])
+@login_required
+def downvote(pitch_id):
+    pitch = Pitch.query.get(pitch_id)
+    user = current_user
+    pitch = Downvote.query.filter_by(pitch_id= pitch_id)
+    
+    if Downvote.query.filter(Downvote.user_id==user.id,Downvote.pitch_id==pitch_id).first():
+        return  redirect(url_for('.comment'))
+
+
+    new_downvote = Downvote(pitch_id=pitch_id, user = current_user)
+    new_downvote.save_downvotes()
+    return redirect(url_for('main.index'))
+
+
+# user profile page
+@main.route('/user/<name>')
+def profile(name):
+    user = User.query.filter_by(username=name).first()
+    
+    
+    if user is None:
+        abort(404)
+
+    title = 'SixtySec Pitch: myProfile'
+    return render_template("profile/profile.html", user=user, title=title)
+
+# update profile page - update user bio
+@main.route('/user/<name>/updateprofile', methods=['GET', 'POST'])
+@login_required
+def updateprofile(name):
+    form = UpdateProfile()
+    user = User.query.filter_by(username=name).first()
+    
+    if user == None:
+        abort(404)
+    
+    if form.validate_on_submit():
+        user.bio = form.bio.data
+        user.save_user()
+
+        db.session.add(user)
+        db.session.commit()
+
+        return redirect(url_for('.profile', name=name))
+    
+    title = 'SixtySec Pitch'
+    return render_template('profile/update.html', form=form, user = user, title =title)
+
+# update prof pic
+@main.route('/user/<name>/update/pic', methods=['POST'])
+@login_required
+def update_pic(name):
+    user = User.query.filter_by(username=name).first()
+    if 'photo' in request.files:
+        filename = photos.save(request.files['photo'])
+        path = f'photos/{filename}'
+        user.profile_pic_path = path
+        db.session.commit()
+    return redirect(url_for('main.profile', name=name))
+
+
