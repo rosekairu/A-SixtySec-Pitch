@@ -66,9 +66,10 @@ To get the code...
 
 | Behaviour | Input | Output |
 | :---------------- | :---------------: | ------------------: |
-| Load the page | **On page load** | Get all posts, Select between signup and login|
-| Select SignUp| **Email**,**Username**,**Password** | Redirect to login|
-| Select Login | **Username** and **password** | Redirect to page with app pitches based on categories and commenting section|
+| Load the page | **On page load** | Home,Random Quote, Pitch, Select between Register and Login|
+| Select Register| **Email**,**Username**,**Password** | Redirect to signup/register page |
+| Select Login| **Email**, **Password** | Redirect to Login page |
+| On Login page load | **On page load** | Redirect to page with app pitches based on categories and commenting section|
 | Select comment button | **Comment** | Form that you input your comment|
 | Click on submit |  | Redirect to all comments template with your comment and other comments|
 
@@ -86,7 +87,7 @@ No known bugs
 
 ### Support and contact details
 
-If you have any comments, suggestions, questions, or contributions, please email me at [rosekairu@gmail.com]
+If you have any comments, suggestions, questions, and/or contributions, please email me at [rosekairu@gmail.com]
 
 ### [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/rosekairu/A-SixtySec-Pitch/blob/master/LICENSE) <br>
 
