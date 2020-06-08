@@ -14,8 +14,8 @@ class LoginForm(FlaskForm):
 
 class RegistrationForm(FlaskForm):
     email = StringField('Your Email Address',validators=[Required(), Email()], render_kw={"placeholder": "Enter your email address"})
-    username = StringField('Enter your username',validators = [Required()], render_kw={"placeholder": "Enter your preferred username"})
-    password = PasswordField('Password',validators = [Required(), EqualTo('password_confirm',message = 'Passwords must match')], render_kw={"placeholder": "Preferred password"})
+    username = StringField('Enter your username',validators = [Required()], render_kw={"placeholder": "Enter your prefered username"})
+    password = PasswordField('Password',validators = [Required(), EqualTo('password_confirm',message = 'Passwords must match')], render_kw={"placeholder": "Prefered password"})
     password_confirm = PasswordField('Confirm Passwords',validators = [Required()], render_kw={"placeholder": "Confirm password"})
     submit = SubmitField('Sign Up')
 
