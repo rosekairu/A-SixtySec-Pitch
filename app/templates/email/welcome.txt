@@ -1,4 +1,0 @@
-Hello {{user.username}}
-Welcome to SixtySec Pitch
-We have just seen you have signed up for our application and We want to welcome you to the family. 
-Please enjoy and don't forget to comment and/or vote on your favourite Pitch.
