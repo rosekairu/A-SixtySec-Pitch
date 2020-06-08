@@ -1,7 +1,7 @@
 # SixtySec Pitch
 
 
-## Author
+### Author
 
 [rosekairu](https://github.com/rosekairu)
 
@@ -30,7 +30,8 @@ To get the code...
 
   ```bash
   https://github.com/rosekairu/A-SixtySec-Pitch.git
-    ```
+   ```
+
 2. Move to the folder:
 
   ```bash
