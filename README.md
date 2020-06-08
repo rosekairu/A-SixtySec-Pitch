@@ -1,5 +1,6 @@
 # SixtySec Pitch
 
+
 ## Author
 
 [rosekairu](https://github.com/rosekairu)
@@ -11,7 +12,7 @@ It also allows users who have signed up to comment and upvote or downvote a pitc
 
 ## Live Link
 
-[View Site](.herokuapp.com/)
+[View Site](https://pitch2impress.herokuapp.com/)
 
 ### Setup/Installation Requirements
 
@@ -87,6 +88,6 @@ No known bugs
 
 If you have any comments, suggestions, questions, or contributions, please email me at [rosekairu@gmail.com]
 
-### [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/rosekairu/NewsFeed/blob/master/LICENSE) <br>
+### [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/rosekairu/A-SixtySec-Pitch/blob/master/LICENSE) <br>
 
 Copyright (c) **Rose Kairu June 2020**
