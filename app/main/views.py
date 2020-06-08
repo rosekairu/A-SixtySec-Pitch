@@ -91,7 +91,7 @@ def postComments():
     return render_template('/blogposts.html', TechSavyPosts=TechSavyPosts, MoneySmartPosts=MoneySmartPosts, LifenLaughterPosts=LifenLaughterPosts, comment = comment, CommentForm=comment_form, title=title)
     
 
-@main.route('/upvote/<int:pitch_id>', methods=['POST', 'GET'])
+@main.route('/upvote/<pitch_id>', methods=['POST', 'GET'])
 @login_required
 def upvote(pitch_id):
     pitch = Pitch.query.get(pitch_id)
@@ -99,7 +99,7 @@ def upvote(pitch_id):
     pitch_upvotes = Upvote.query.filter_by(pitch_id= pitch_id)
     
     if Upvote.query.filter(Upvote.user_id==user.id,Upvote.pitch_id==pitch_id).first():
-        return  redirect(url_for('.comment'))
+        return  redirect(url_for('.postComments'))
 
 
     new_upvote = Upvote(pitch_id=pitch_id, user = current_user)
@@ -116,7 +116,7 @@ def downvote(pitch_id):
     pitch = Downvote.query.filter_by(pitch_id= pitch_id)
     
     if Downvote.query.filter(Downvote.user_id==user.id,Downvote.pitch_id==pitch_id).first():
-        return  redirect(url_for('.comment'))
+        return  redirect(url_for('.postComments'))
 
 
     new_downvote = Downvote(pitch_id=pitch_id, user = current_user)
