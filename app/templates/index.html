@@ -1,80 +1,20 @@
-{% extends 'base.html'%} {% import 'bootstrap/wtf.html' as wtf%} {% block content %} {% block styles%} {{ super() }}
-<link rel="stylesheet" href="{{url_for('static',filename='css/custom.css')}}"> {% endblock %}
+{% extends 'base.html'%}
 
-<div class="homebg">
-    <div class="homeDiv">
-        <div class="">
-            <h1 class="homeHeading display-3">SixtySec Pitch</h1>
+<link rel="stylesheet" href="{{url_for('static',filename='css/home.css')}}"> {% endblock %}
 
-            <div class="card">
-                <div class="card-header" style="background-color: aqua;">
-                    Random Quote - A SixtySec snippet
-                </div>
-
-                <div class="card-body" style="background-color: lightcyan;">
-                    <blockquote class="blockquote mb-0">
-                        <p>{{quote.quote}}</p>
-                        <footer class="blockquote-footer">
-                            <p class="">
-                                <strong style="font-style: italic;"> Author :</strong>
-                                <small><span style="text-decoration: underline; font-size: 18px;">
-                              {{quote.author}}</span>
-                  </small>
-                            </p> <cite title="Source Title"> sourced from: {{quote.permalink}}</cite>
-
-                        </footer>
-                    </blockquote>
+<!-- content block-->
+{% block content %}
+<div class="first">
+    <div class="container-fluid welcome-page">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 welcome">
+                    {% if current_user.is_authenticated%}
+                    <a id="start" class="btn btn-danger animated infinite flash" href="{{url_for('home.index')}}">See all Pitches</a> {% else %}
+                    <a id="start" class="btn btn-danger animated infinite flash" href="{{url_for('auth.login')}}">Sign In</a> {% endif %}
                 </div>
             </div>
-        </div>
-
-
-        <!-- blog posts -->
-        <div class="row">
-
-            <div class="col-md-4 forIpad">
-                <div class="card">
-                    <h5 class="card-header" style="font-size: 25px;"><a href="{{url_for('main.goToBlogposts', _anchor='tech')}}">TechSavy</a></h5>
-                    <div class="card-body" style="background-color:azure">
-                        <h5 class="card-title" style="background-color: teal;">Lyndon B. Johnson, Former President of the United States of America</h5>
-                        <p class="card-text ">
-                            “If future generations are to remember us more with gratitude than sorrow, we must achieve more than just the miracles of technology. We must also leave them a glimpse of the world as it was created, not just as it looked when we got through with it.”
-                        </p>
-                        <a href="{{url_for( 'main.goToBlogposts',_anchor='tech' )}} " class="btn btn-outline-primary ">Read more...</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-4 forIpad ">
-                <div class="card ">
-                    <h5 class="card-header " style="font-size: 25px; "><a href="{{url_for( 'main.goToBlogposts',_anchor='money' )}} ">MoneySmart </a></h5>
-                    <div class="card-body " style="background-color: azure; ">
-                        <h5 class="card-title" style="background-color: teal;">William A. Ward</h5>
-                        <p class="card-text ">
-                            “Before you speak, listen. Before you write, think. Before you spend, earn. Before you invest, investigate. Before you criticize, wait. Before you pray, forgive. Before you quit, try. Before you retire, save. Before you die, give.”
-                        </p>
-                        <a href="{{url_for( 'main.goToBlogposts',_anchor='money' )}} " class="btn btn-outline-primary ">Read more...</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-4 forIpad ">
-                <div class="card ">
-                    <h5 class="card-header " style="font-size: 25px; "><a href="{{url_for( 'main.goToBlogposts',_anchor='life' )}} ">Life & Laughter </a></h5>
-                    <div class="card-body " style="background-color: azure; ">
-                        <h5 class="card-title" style="background-color: teal;">Audrey Hepburn</h5>
-                        <p class="card-text ">
-                            “I love people who make me laugh. I honestly think it's the thing I like most, to laugh. It cures a multitude of ills. It's probably the most important thing in a person.”
-                        </p>
-                        <a href="{{url_for( 'main.goToBlogposts', _anchor='life' )}} " class="btn btn-outline-primary ">Read more...</a>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-        <div>
         </div>
     </div>
 </div>
-
 {% endblock %}

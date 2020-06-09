@@ -3,17 +3,15 @@ from wtforms import SelectField,StringField,TextAreaField,RadioField,SubmitField
 from wtforms.validators import Required,Email,EqualTo
 from wtforms import ValidationError
 
-class SharePostForm(FlaskForm):
-    '''
-    The blog-post sharing form
-    '''
-    topic = SelectField('', choices=[('TechSavy', 'TechSavy'), ('MoneySmart','MoneySmart'), ('Life & Laughter', 'Life & Laughter')], validators=[Required()])
-    content = TextAreaField('', validators=[Required()], render_kw={"placeholder": "Write your story here :)"})
-    submit = SubmitField('Share')
+class PitchForm(FlaskForm):
+	title = StringField('Title', validators=[Required()])
+	description = TextAreaField("What would you like to pitch ?",validators=[Required()])
+	category = RadioField('Label', choices=[ ('promotionpitch','promotionpitch'), ('interviewpitch','interviewpitch'),('pickuplines','pickuplines'),('productpitch','productpitch')],validators=[Required()])
+	submit = SubmitField('Submit')
     
 class CommentForm(FlaskForm):
-    description = TextAreaField('',validators=[Required()], render_kw={"placeholder": "Post your comment here..."})
-    submit = SubmitField('Post Comment')
+	description = TextAreaField('Add comment',validators=[Required()])
+	submit = SubmitField()
 
 class UpdateProfile(FlaskForm):
     bio = TextAreaField('Tell us about you...',validators = [Required()])

@@ -2,96 +2,76 @@ import markdown2
 from flask import render_template,request,redirect,url_for,abort,flash
 from . import main
 from flask_login import login_required, current_user
-from ..models import Blogpost, User, Comment, Upvote, Downvote,PhotoProfile
-from .forms import UpdateProfile, SharePostForm, CommentForm
+from ..models import Pitch, User,Comment,Upvote,Downvote,PhotoProfile
+from .forms import UpdateProfile, PitchForm, CommentForm, UpvoteForm
+from flask.views import View,MethodView
 from .. import db, photos
-from ..requests import get_quote
 
 
-#Views
 
-    # home page
-@main.route('/')
+# Views
+@main.route('/', methods = ['GET','POST'])
 def index():
 
     '''
     View root page function that returns the index page and its data
     '''
-    quote = get_quote()
+    pitch = Pitch.query.filter_by().first()
+    title = 'Home'
+    pickuplines = Pitch.query.filter_by(category="pickuplines")
+    interviewpitch = Pitch.query.filter_by(category = "interviewpitch")
+    promotionpitch = Pitch.query.filter_by(category = "promotionpitch")
+    productpitch = Pitch.query.filter_by(category = "productpitch")
+
+    upvotes = Upvote.get_all_upvotes(pitch_id=Pitch.id)
     
-    title = 'SixtySec Pitch'
-    return render_template('index.html', title=title, quote= quote)
+
+    return render_template('home.html', title = title, pitch = pitch, pickuplines=pickuplines, interviewpitch= interviewpitch, promotionpitch = promotionpitch, productpitch = productpitch, upvotes=upvotes)
 
 
 
-# share blogpost 
-@main.route('/sharepost', methods=['GET','POST'])
-def sharepost():
-    '''
-    View share post page function that returns the post sharing page and its data
-    '''
-    quote = get_quote()
-        
-    form = SharePostForm()
-    # blogposts = Blogpost.query.all()
-    
+@main.route('/pitches/new/', methods = ['GET','POST'])
+@login_required
+def new_pitch():
+    form = PitchForm()
+    my_upvotes = Upvote.query.filter_by(pitch_id = Pitch.id)
     if form.validate_on_submit():
-        blogpost = Blogpost(category=form.topic.data, blogpost=form.content.data)
-        db.session.add(blogpost)
+        description = form.description.data
+        title = form.title.data
+        user_id = current_user
+        category = form.category.data
+        print(current_user._get_current_object().id)
+        new_pitch = Pitch(user_id =current_user._get_current_object().id, title = title,description=description,category=category)
+        db.session.add(new_pitch)
         db.session.commit()
-    
-        return redirect(url_for('main.goToBlogposts'))
-    
-    title = 'SixtySec Pitch'
-    return render_template('sharepost.html', title=title, SharePostForm=form, quote=quote)
-    
-
-# Redirect to blogpost page
-@main.route('/blogposts', methods=['GET','POST'])
-def goToBlogposts():
-    '''
-    View blogposts page function that returns the pitches page and its details
-    '''   
-    TechSavyPosts = Blogpost.query.filter_by(category='TechSavy').all()
-    MoneySmartPosts = Blogpost.query.filter_by(category='MoneySmart').all()
-    LifenLaughterPosts = Blogpost.query.filter_by(category='Life & Laughter').all()
-    
-    comment_form = CommentForm()
-    # comments = Blogpost.query.filter_by(blogpost_id=id)
-    # comments = Comment.query.filter_by(blogpost_id=id).first()
-    comments = Comment.query.filter(Comment.blogpost_id > 0).all()
-
-    
-    title = 'SixtySec Pitch'
-    return render_template('/blogposts.html', TechSavyPosts=TechSavyPosts, MoneySmartPosts=MoneySmartPosts, LifenLaughterPosts=LifenLaughterPosts, comments = comments, CommentForm=comment_form, title=title)
-
-
-#posting comments
-@main.route('/blogposts', methods = ['GET','POST'])
-def postComments():
-    '''
-    View comments function that returns the blogposts page with the posted comments
-    '''
-    print('===================================================')
-    
-    commentform = CommentForm()
+        db.session.add(new_pitch)
+        db.session.commit()
         
-    print('===================================================')
-    
-    if commentform.validate_on_submit():
-        comment = Comment(comment=commentform.comment.data, blogpost_id=3, users_id = 2)
-        print(comment)
-        print('===================================================')
-        db.session.add(comment)
-        db.session.commit()
-    
-        return redirect(url_for('main.goToBlogposts'))
-    
-    title='SixtySec Pitch'
-    return render_template('/blogposts.html', TechSavyPosts=TechSavyPosts, MoneySmartPosts=MoneySmartPosts, LifenLaughterPosts=LifenLaughterPosts, comment = comment, CommentForm=comment_form, title=title)
+        
+        return redirect(url_for('main.index'))
+    return render_template('pitches.html',form=form)
     
 
-@main.route('/upvote/<pitch_id>', methods=['POST', 'GET'])
+@main.route('/comment/new/<int:pitch_id>', methods = ['GET','POST'])
+@login_required
+def new_comment(pitch_id):
+    form = CommentForm()
+    pitch=Pitch.query.get(pitch_id)
+    if form.validate_on_submit():
+        description = form.description.data
+
+        new_comment = Comment(description = description, user_id = current_user._get_current_object().id, pitch_id = pitch_id)
+        db.session.add(new_comment)
+        db.session.commit()
+
+
+        return redirect(url_for('.new_comment', pitch_id= pitch_id))
+
+    all_comments = Comment.query.filter_by(pitch_id = pitch_id).all()
+    return render_template('comments.html', form = form, comment = all_comments, pitch = pitch )
+    
+
+@main.route('/pitch/upvote/<int:pitch_id>/upvote', methods = ['GET', 'POST'])
 @login_required
 def upvote(pitch_id):
     pitch = Pitch.query.get(pitch_id)
@@ -99,7 +79,7 @@ def upvote(pitch_id):
     pitch_upvotes = Upvote.query.filter_by(pitch_id= pitch_id)
     
     if Upvote.query.filter(Upvote.user_id==user.id,Upvote.pitch_id==pitch_id).first():
-        return  redirect(url_for('.postComments'))
+        return  redirect(url_for('main.index'))
 
 
     new_upvote = Upvote(pitch_id=pitch_id, user = current_user)
@@ -108,15 +88,15 @@ def upvote(pitch_id):
 
 
 
-@main.route('/downvote/<pitch_id>', methods=['POST', 'GET'])
+@main.route('/pitch/downvote/<int:pitch_id>/downvote', methods = ['GET', 'POST'])
 @login_required
 def downvote(pitch_id):
     pitch = Pitch.query.get(pitch_id)
     user = current_user
-    pitch = Downvote.query.filter_by(pitch_id= pitch_id)
+    pitch_downvotes = Downvote.query.filter_by(pitch_id= pitch_id)
     
     if Downvote.query.filter(Downvote.user_id==user.id,Downvote.pitch_id==pitch_id).first():
-        return  redirect(url_for('.postComments'))
+        return  redirect(url_for('main.index'))
 
 
     new_downvote = Downvote(pitch_id=pitch_id, user = current_user)

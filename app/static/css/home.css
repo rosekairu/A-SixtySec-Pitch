@@ -1,7 +1,5 @@
 .first {
-    background-image: url(../imgs/bg5.jpg);
-    background-attachment: fixed;
-    background-repeat: no-repeat;
+    background-image: url("../imgs/bg1.jpg");
     background-size: cover;
-    height: 100%;
+    background-repeat: no-repeat;
 }

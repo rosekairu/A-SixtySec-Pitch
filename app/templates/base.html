@@ -7,10 +7,14 @@
 {%block styles %} {{super()}}
 <link href="https://fonts.googleapis.com/css?family=Baloo+Bhai|Comfortaa|Courgette|Katibeh|Philosopher|Tangerine|ZCOOL+XiaoWei&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="{{url_for('static',filename='css/custom.css')}}">
+<link rel="stylesheet" href="{{url_for('static',filename='css/home.css')}}">
 
 <!--Importing the simple mde css and js files  -->
 {{ simplemde.css}} {{ simplemde.js }} {% endblock styles %}
+
+<div id="bg">
+    <img src="../static/imgs/bg5.jpg" alt="">
+</div>
 
 <!-- Navbar block  -->
 {% block navbar %} {% include 'navbar.html' %} {% endblock navbar %}

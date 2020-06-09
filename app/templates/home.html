@@ -1,30 +1,14 @@
-<!--
-{% extends 'bootstrap/base.html' %} {% import 'macros.html' as macro %} {% block navbar %} {% include 'navbar.html'%} {% endblock %} {% block content %}
+{% extends 'bootstrap/base.html' %} {% import 'macros.html' as macro %} {% block navbar %} {% include 'navbar.html'%} {% endblock %} {% block content %} {% block styles%} {{ super() }}
+<link rel="stylesheet" href="{{url_for('static',filename='css/home.css')}}"> {% endblock %}
 
 <div class="first">
-    <div class="homeDiv">
-        <div class="">
-            <h1 class="homeHeading display-3">SixtySec Pitch</h1>
+    <div class="container">
 
-            <div class="card">
-                <div class="card-header">
-                    Random Quote - A SixtySec Pitch snippet
-                </div>
-
-                <div class="card-body">
-                    <blockquote class="blockquote mb-0">
-                        <p>{{quote.quote}}</p>
-                        <footer class="blockquote-footer">
-                            {{quote.author}} <cite title="Source Title"> sourced from: {{quote.permalink}}</cite>
-                        </footer>
-                    </blockquote>
-                </div>
-            </div>
-        </div>
-
-        <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <h3 style="color: green;text-align: center">Pitch Categories</h3>
+        <br>
+        <ul class="nav nav-pills nav-justified nav-fill" role="tablist">
             <li class="nav-item">
-                <a class="nav-link active" data-toggle="tab" href="#fashion">Fashion</a>
+                <a class="nav-link active" data-toggle="tab" href="#product">Product</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" data-toggle="tab" href="#interview">Interview</a>
@@ -33,22 +17,22 @@
                 <a class="nav-link" data-toggle="tab" href="#pickupline">Pickupline</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-toggle="tab" href="#religious">Religious</a>
+                <a class="nav-link" data-toggle="tab" href="#promotion">Promotion</a>
             </li>
         </ul>
-    -->
-<!-- Tab panes -->
-<!--
-<div class="tab-content">
-    <div class="tab-pane active" id="fashion"><br> {{ macro.display(fashionpitch) }}
-    </div>
-    <div class="tab-pane" id="interview"><br> {{ macro.display(interviewpitch) }}
-    </div>
-    <div class="tab-pane" id="pickupline"><br> {{ macro.display(pickuplines) }}
-    </div>
-    <div class="tab-pane" id="religious"><br> {{ macro.display(religiouspitch) }}
+
+        <div class="tab-content">
+            <div id="product" class="container tab-pane active"><br> {{ macro.display(productpitch) }}
+
+            </div>
+            <div id="interview" class="container tab-pane fade"><br> {{ macro.display(interviewpitch) }}
+            </div>
+            <div id="pickupline" class="container tab-pane fade"><br> {{ macro.display(pickuplines)}}
+            </div>
+            <div id="promotion" class="container tab-pane fade"><br> {{ macro.display(promotionpitch) }}
+            </div>
+
+        </div>
     </div>
 </div>
-</div>
-</div>
-{% endblock %} -->
+{% endblock %}
