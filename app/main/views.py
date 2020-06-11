@@ -42,10 +42,10 @@ def new_pitch():
         category = form.category.data
         print(current_user._get_current_object().id)
         new_pitch = Pitch(user_id =current_user._get_current_object().id, title = title,description=description,category=category)
+        
         db.session.add(new_pitch)
         db.session.commit()
-        db.session.add(new_pitch)
-        db.session.commit()
+        
         
         
         return redirect(url_for('main.index'))
@@ -60,7 +60,7 @@ def new_comment(pitch_id):
     if form.validate_on_submit():
         description = form.description.data
 
-        new_comment = Comment(description = description, user_id = current_user._get_current_object().id, pitch_id = pitch_id)
+        new_comment = Comment(description = description, users_id = current_user._get_current_object().id, pitch_id = pitch_id)
         db.session.add(new_comment)
         db.session.commit()
 
